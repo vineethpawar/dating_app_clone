@@ -1,10 +1,20 @@
 import React from "react";
-import { NativeBaseProvider, Box } from "native-base";
+import "./App.css";
+import { NativeBaseProvider, Box, VStack } from "native-base";
+import { BottomTab } from "./xcomp/bottomtab";
+import ActiveScreen from "./screens";
 
 export default function App() {
   return (
     <NativeBaseProvider>
-      <Box>Hello world</Box>
+      <VStack height={"100vh"} w={"100%"} bg="red.400">
+        <Box flex={1}>
+          <ActiveScreen />
+        </Box>
+        <Box>
+          <BottomTab />
+        </Box>
+      </VStack>
     </NativeBaseProvider>
   );
 }
