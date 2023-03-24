@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Text, HStack, Center, Pressable } from "native-base";
+import { Box, HStack, Center, Pressable, Divider } from "native-base";
 
 // MUI icons
 import ViewCarouselOutlinedIcon from "@mui/icons-material/ViewCarouselOutlined";
@@ -8,8 +8,8 @@ import ViewCarouselIcon from "@mui/icons-material/ViewCarousel";
 import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
 import ChatBubbleOutlinedIcon from "@mui/icons-material/ChatBubbleOutlined";
 
-import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
-import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
+import AutoAwesomeOutlinedIcon from "@mui/icons-material/AutoAwesomeOutlined";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import PersonIcon from "@mui/icons-material/Person";
@@ -24,13 +24,14 @@ export function BottomTab() {
       width="100%"
       // maxW="300px"
       alignSelf="center"
+      borderTopColor={"light.300"}
+      borderTopWidth="1px"
     >
-      <HStack bg="indigo.600" alignItems="center" safeAreaBottom shadow={6}>
+      <HStack alignItems="center" safeAreaBottom shadow={6} minH="60px">
         <Pressable
           //   @ts-ignore
           cursor="pointer"
           opacity={selected === 1 ? 1 : 0.5}
-          py="3"
           flex={1}
           onPress={() => setSelected(1)}
         >
@@ -38,14 +39,14 @@ export function BottomTab() {
             {selected === 1 ? (
               <ViewCarouselIcon
                 style={{
-                  fontSize: "30px",
+                  fontSize: "37px",
                   color: "black",
                 }}
               />
             ) : (
               <ViewCarouselOutlinedIcon
                 style={{
-                  fontSize: "30px",
+                  fontSize: "32px",
                   color: "black",
                 }}
               />
@@ -53,11 +54,17 @@ export function BottomTab() {
           </Center>
         </Pressable>
 
+        <Divider
+          orientation="vertical"
+          height="60%"
+          w="1px"
+          color={"light.300"}
+        />
+
         <Pressable
           //   @ts-ignore
           cursor="pointer"
           opacity={selected === 2 ? 1 : 0.5}
-          py="2"
           flex={1}
           onPress={() => setSelected(2)}
         >
@@ -65,12 +72,45 @@ export function BottomTab() {
             {selected === 2 ? (
               <ChatBubbleOutlinedIcon
                 style={{
-                  fontSize: "30px",
+                  fontSize: "28px",
                   color: "black",
                 }}
               />
             ) : (
               <ChatBubbleOutlineOutlinedIcon
+                style={{
+                  fontSize: "23px",
+                  color: "black",
+                }}
+              />
+            )}
+          </Center>
+        </Pressable>
+
+        <Divider
+          orientation="vertical"
+          height="60%"
+          w="1px"
+          color={"light.300"}
+        />
+
+        <Pressable
+          //   @ts-ignore
+          cursor="pointer"
+          opacity={selected === 3 ? 1 : 0.6}
+          flex={1}
+          onPress={() => setSelected(3)}
+        >
+          <Center>
+            {selected === 3 ? (
+              <AutoAwesomeIcon
+                style={{
+                  fontSize: "35px",
+                  color: "black",
+                }}
+              />
+            ) : (
+              <AutoAwesomeOutlinedIcon
                 style={{
                   fontSize: "30px",
                   color: "black",
@@ -80,37 +120,17 @@ export function BottomTab() {
           </Center>
         </Pressable>
 
-        <Pressable
-          //   @ts-ignore
-          cursor="pointer"
-          opacity={selected === 3 ? 1 : 0.6}
-          py="2"
-          flex={1}
-          onPress={() => setSelected(3)}
-        >
-          <Center>
-            {selected === 3 ? (
-              <FavoriteOutlinedIcon
-                style={{
-                  fontSize: "30px",
-                  color: "black",
-                }}
-              />
-            ) : (
-              <FavoriteBorderOutlinedIcon
-                style={{
-                  fontSize: "30px",
-                  color: "black",
-                }}
-              />
-            )}
-          </Center>
-        </Pressable>
+        <Divider
+          orientation="vertical"
+          height="60%"
+          w="1px"
+          color={"light.300"}
+        />
+
         <Pressable
           //   @ts-ignore
           cursor="pointer"
           opacity={selected === 4 ? 1 : 0.5}
-          py="2"
           flex={1}
           onPress={() => setSelected(4)}
         >
@@ -118,7 +138,7 @@ export function BottomTab() {
             {selected === 4 ? (
               <PersonIcon
                 style={{
-                  fontSize: "30px",
+                  fontSize: "35px",
                   color: "black",
                 }}
               />

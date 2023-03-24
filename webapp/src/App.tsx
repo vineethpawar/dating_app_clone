@@ -7,7 +7,7 @@ import ActiveScreen from "./screens";
 export default function App() {
   return (
     <NativeBaseProvider>
-      <VStack height={"100vh"} w={"100%"} bg="red.400">
+      <VStack height={"100vh"} w={"100%"} bg="light.100">
         <Box flex={1}>
           <ActiveScreen />
         </Box>

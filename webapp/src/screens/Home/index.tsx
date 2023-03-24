@@ -1,7 +1,14 @@
-import { Box, Button, HStack, Image } from "native-base";
-import React, { useMemo, useRef, useState } from "react";
-import TinderCard from "react-tinder-card";
+import { Box, Button, HStack, Image, Pressable } from "native-base";
+import React, { useCallback, useMemo, useRef, useState } from "react";
+import SwipeCard from "../../util/DeckSwipeWrapper";
 import { ICardDirection } from "../../util/interfaces";
+import {
+  RevealMore,
+  ShowPrevious,
+  SwipeLeft,
+  SwipeRight,
+  SwipeTop,
+} from "../../xcomp/CardCTA";
 
 const deck = [
   {
@@ -31,8 +38,13 @@ const deck = [
   },
 ];
 const Home: React.FC = () => {
-  const [currentIndex, setCurrentIndex] = useState(deck.length - 1);
+  const [swipeInfo, setSwipeInfo] = useState("none");
+  const [currentIndex, setCurrentIndex] = useState(deck?.length - 1);
   const [lastDirection, setLastDirection] = useState<ICardDirection>();
+
+  const updateSwipeInfo = useCallback(async (dir: ICardDirection | "none") => {
+    setSwipeInfo(dir);
+  }, []);
 
   // used for outOfFrame closure
   const currentIndexRef = useRef(currentIndex);
@@ -64,15 +76,6 @@ const Home: React.FC = () => {
     updateCurrentIndex(index - 1);
   };
 
-  const outOfFrame = (name: string, idx: number) => {
-    console.log(`${name} (${idx}) left the screen!`, currentIndexRef.current);
-    // @ts-ignore
-    currentIndexRef.current >= idx && childRefs[idx].current.restoreCard(); // handle the case in which go back is pressed before card goes outOfFrame
-    // TODO: when quickly swipe and restore multiple times the same card,
-    // it happens multiple outOfFrame events are queued and the card disappear
-    // during latest swipes. Only the last outOfFrame event should be considered valid
-  };
-
   const swipe = async (dir: ICardDirection) => {
     if (canSwipe && currentIndex < deck?.length) {
       // @ts-ignore
@@ -90,50 +93,98 @@ const Home: React.FC = () => {
   };
 
   return (
-    <Box p={6}>
-      <Box position="relative" h={"70vh"}>
+    <Box py={6} px={3} flex={1}>
+      <Box position="relative" flex={1} shadow={4} borderTopRadius={"20px"}>
         {deck?.map((card, index) => (
-          <TinderCard
+          <SwipeCard
             key={card?.id}
             // @ts-ignore
             ref={childRefs[index]}
+            swipeRequirementType="position"
+            swipeThreshold={100}
+            flickOnSwipe={true}
             className="cardContainer"
-            onSwipe={(dir) => swiped(dir, card?.name, index)}
-            onCardLeftScreen={() => outOfFrame(card?.name, index)}
+            onSwipe={(dir: ICardDirection) => swiped(dir, card?.name, index)}
+            onCardLeftScreen={() => updateSwipeInfo("none")}
             preventSwipe={["down"]}
+            onSwipeRequirementFulfilled={updateSwipeInfo}
+            onSwipeRequirementUnfulfilled={() => {
+              updateSwipeInfo("none");
+            }}
           >
             <Image
-              src={card?.img}
-              style={{ height: "70vh" }}
               borderRadius={"20px"}
+              src={card?.img}
+              resizeMode={"cover"}
+              style={{ height: "100%", width: "100%" }}
             />
-          </TinderCard>
+          </SwipeCard>
         ))}
+
+        <HStack
+          borderBottomRadius={"20px"}
+          bottom={0}
+          right={0}
+          left={0}
+          py={"20px"}
+          position={"absolute"}
+          space={4}
+          alignItems="center"
+          justifyContent={"center"}
+          bg="rgba(0,0,0,0.85)"
+          shadow={"11"}
+        >
+          <Pressable onPress={() => goBack()}>
+            {({ isPressed }) => {
+              return <ShowPrevious isPressed={isPressed} />;
+            }}
+          </Pressable>
+
+          <Pressable
+            // @ts-ignore
+            disabled={!canSwipe}
+            onPress={() => swipe("left")}
+          >
+            {({ isPressed }) => {
+              return (
+                <SwipeLeft isPressed={isPressed || swipeInfo === "left"} />
+              );
+            }}
+          </Pressable>
+
+          <Pressable
+            // @ts-ignore
+            disabled={!canSwipe}
+            onPress={() => swipe("up")}
+          >
+            {({ isPressed }) => {
+              return <SwipeTop isPressed={isPressed || swipeInfo === "up"} />;
+            }}
+          </Pressable>
+
+          <Pressable
+            // @ts-ignore
+            disabled={!canSwipe}
+            onPress={() => swipe("right")}
+          >
+            {({ isPressed }) => {
+              return (
+                <SwipeRight isPressed={isPressed || swipeInfo === "right"} />
+              );
+            }}
+          </Pressable>
+
+          <Pressable
+            // @ts-ignore
+            disabled={!canSwipe}
+            // onPress={() => swipe("right")}
+          >
+            {({ isPressed }) => {
+              return <RevealMore isRevealed={true} isPressed={isPressed} />;
+            }}
+          </Pressable>
+        </HStack>
       </Box>
-
-      <HStack space={4} justifyContent={"center"}>
-        <Button
-          // @ts-ignore
-          disabled={!canSwipe}
-          onPress={() => swipe("left")}
-        >
-          Swipe left!
-        </Button>
-        <Button
-          // @ts-ignore
-
-          onPress={() => goBack()}
-        >
-          Undo swipe!
-        </Button>
-        <Button
-          // @ts-ignore
-          disabled={!canSwipe}
-          onPress={() => swipe("right")}
-        >
-          Swipe right!
-        </Button>
-      </HStack>
     </Box>
   );
 };
