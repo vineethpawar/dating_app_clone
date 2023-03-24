@@ -38,9 +38,13 @@ const deck = [
   },
 ];
 const Home: React.FC = () => {
+  const [likesRemaining, setLikesRemaining] = useState(30);
   const [swipeInfo, setSwipeInfo] = useState("none");
   const [currentIndex, setCurrentIndex] = useState(deck?.length - 1);
   const [lastDirection, setLastDirection] = useState<ICardDirection>();
+
+  const reduceLikesRemaining = () =>
+    setLikesRemaining((likes) => (likes > 0 ? likes - 1 : likes));
 
   const updateSwipeInfo = useCallback(async (dir: ICardDirection | "none") => {
     setSwipeInfo(dir);
@@ -165,11 +169,19 @@ const Home: React.FC = () => {
           <Pressable
             // @ts-ignore
             disabled={!canSwipe}
-            onPress={() => swipe("right")}
+            onPress={() => {
+              if (!!likesRemaining) {
+                reduceLikesRemaining();
+                swipe("right");
+              }
+            }}
           >
             {({ isPressed }) => {
               return (
-                <SwipeRight isPressed={isPressed || swipeInfo === "right"} />
+                <SwipeRight
+                  likesRemaining={likesRemaining}
+                  isPressed={isPressed || swipeInfo === "right"}
+                />
               );
             }}
           </Pressable>

@@ -1,4 +1,4 @@
-import { Box } from "native-base";
+import { Box, Text } from "native-base";
 import React from "react";
 import ReplayIcon from "@mui/icons-material/Replay";
 import CloseIcon from "@mui/icons-material/Close";
@@ -74,11 +74,13 @@ export const SwipeTop: React.FC<{ isPressed?: boolean }> = ({ isPressed }) => {
   );
 };
 
-export const SwipeRight: React.FC<{ isPressed?: boolean }> = ({
-  isPressed,
-}) => {
+export const SwipeRight: React.FC<{
+  isPressed?: boolean;
+  likesRemaining?: number;
+}> = ({ isPressed, likesRemaining = 0 }) => {
   return (
     <Box
+      position="relative"
       p={2}
       bg={isPressed ? "#dc0000" : "transparent"}
       borderWidth={"3px"}
@@ -88,6 +90,22 @@ export const SwipeRight: React.FC<{ isPressed?: boolean }> = ({
         transform: [{ scale: isPressed ? 1 : 1.05 }],
       }}
     >
+      <Box
+        bg="white"
+        borderRadius={"100%"}
+        position={"absolute"}
+        bottom="70%"
+        left={"70%"}
+        zIndex={5}
+        size="25px"
+        alignItems={"center"}
+        justifyContent="center"
+        pb={"2px"}
+        // @ts-ignore
+        style={{ "user-select": "none" }}
+      >
+        <Text fontWeight={"semibold"}>{likesRemaining}</Text>
+      </Box>
       <FavoriteBorderOutlinedIcon
         style={{
           fontSize: "30px",
